@@ -4,7 +4,7 @@ const Users = require("./users-model");
 const restricted = require('../auth/restricted-middleware');
 
 router.get('/', restricted, async (req, res) => {
-    const { department } = req.body;
+    const { department } = req.decodedJwt;
     try {
         const users = await Users.findBy({ department });
         res.status(200).json(users);

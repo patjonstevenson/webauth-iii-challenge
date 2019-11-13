@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
 
         try {
             const saved = await Users.add(user);
-            const token = getJwtToken(saved.username);
+            const token = getJwtToken(saved.username, saved.department);
             res.status(201).json({ user: saved, token });
         } catch (error) {
             console.log(`\nError in POST to /api/auth/register\n${error}\n`);
@@ -30,11 +30,11 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    let { username, password } = req.body;
+    let { username, password, department } = req.body;
     try {
         const user = await Users.findBy({ username }).first();
         if (user && bcrypt.compareSync(password, user.password)) {
-            const token = getJwtToken(username);
+            const token = getJwtToken(username, department);
             res.status(200).json({
                 message: `Welcome to the site, ${username}!`,
                 token
@@ -48,10 +48,10 @@ router.post('/login', async (req, res) => {
     }
 });
 
-function getJwtToken(username) {
+function getJwtToken(username, department) {
     const payload = {
         username,
-        department: "Engineering"
+        department
     };
 
     const secret = process.env.JWT_SECRETE || "make sure it's a secret please";
