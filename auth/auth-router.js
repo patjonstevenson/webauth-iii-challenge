@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
             const token = getJwtToken(saved.username);
             res.status(201).json({ user: saved, token });
         } catch (error) {
-            console.log(`\nError: POST to /api/auth/register\n${error}\n`);
+            console.log(`\nError in POST to /api/auth/register\n${error}\n`);
             res.status(500).json({ message: "Internal server error." });
         }
     } else {
@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
             res.status(401).json({ message: "Invalid credentials." });
         }
     } catch (error) {
-        console.log(`\nError: POST to /api/auth/login\n${error}\n`);
+        console.log(`\nError in POST to /api/auth/login\n${error}\n`);
         res.status(500).json({ message: "Internal server error." });
     }
 });
