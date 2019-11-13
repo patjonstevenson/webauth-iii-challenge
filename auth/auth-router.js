@@ -18,7 +18,8 @@ router.post('/register', async (req, res) => {
 
         try {
             const saved = await Users.add(user);
-            res.status(201).json(saved);
+            const token = getJwtToken(saved.username);
+            res.status(201).json({ user: saved, token });
         } catch (error) {
             console.log(`\nError: POST to /api/auth/register\n${error}\n`);
             res.status(500).json({ message: "Internal server error." });
@@ -34,7 +35,7 @@ router.post('/login', async (req, res) => {
         const user = await Users.findBy({ username }).first();
         if (user && bcrypt.compareSync(password, user.password)) {
             const token = getJwtToken(username);
-            ers.status(200).json({
+            res.status(200).json({
                 message: `Welcome to the site, ${username}!`,
                 token
             });
@@ -53,7 +54,7 @@ function getJwtToken(username) {
         department: "Engineering"
     };
 
-    const secret = process.env.JWT_SECRETE || "make sure it's a secret";
+    const secret = process.env.JWT_SECRETE || "make sure it's a secret please";
 
     const options = {
         expiresIn: '1d'
