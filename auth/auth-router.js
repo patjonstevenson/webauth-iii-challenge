@@ -20,7 +20,8 @@ router.post('/register', async (req, res) => {
             const saved = await Users.add(user);
             res.status(201).json(saved);
         } catch (error) {
-            res.status(500).json({ message: "Internal server error" });
+            console.log(`\nError: POST to /api/auth/register\n${error}\n`);
+            res.status(500).json({ message: "Internal server error." });
         }
     } else {
         res.status(400).json({ message: "Invalid user information", errors: validateResults.errors });
@@ -28,7 +29,37 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-
+    let { username, password } = req.body;
+    try {
+        const user = await Users.findBy({ username }).first();
+        if (user && bcrypt.compareSync(password, user.password)) {
+            const token = getJwtToken(username);
+            ers.status(200).json({
+                message: `Welcome to the site, ${username}!`,
+                token
+            });
+        } else {
+            res.status(401).json({ message: "Invalid credentials." });
+        }
+    } catch (error) {
+        console.log(`\nError: POST to /api/auth/login\n${error}\n`);
+        res.status(500).json({ message: "Internal server error." });
+    }
 });
+
+function getJwtToken(username) {
+    const payload = {
+        username,
+        department: "Engineering"
+    };
+
+    const secret = process.env.JWT_SECRETE || "make sure it's a secret";
+
+    const options = {
+        expiresIn: '1d'
+    };
+
+    return jwt.sign(payload, secret, options);
+}
 
 module.exports = router;
