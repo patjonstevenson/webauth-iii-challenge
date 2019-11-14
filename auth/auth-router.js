@@ -54,7 +54,7 @@ function getJwtToken(username, department) {
         department
     };
 
-    const secret = process.env.JWT_SECRETE || "make sure it's a secret please";
+    const secret = process.env.JWT_SECRET || "make sure it's a secret please";
 
     const options = {
         expiresIn: '1d'
