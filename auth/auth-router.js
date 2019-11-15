@@ -25,7 +25,10 @@ router.post('/register', async (req, res) => {
             res.status(500).json({ message: "Internal server error." });
         }
     } else {
-        res.status(400).json({ message: "Invalid user information", errors: validateResults.errors });
+        res.status(400).json({
+            message: "Invalid user information",
+            errors: validateResults.errors
+        });
     }
 });
 

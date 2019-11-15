@@ -15,9 +15,3 @@ router.get('/', restricted, async (req, res) => {
 });
 
 module.exports = router;
-
-// function checkDepartment(department) {
-//     return (req, res, next) => {
-//         if (req.body.department === )
-//     };
-// }
